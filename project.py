@@ -24,7 +24,9 @@ for data_class in sorted(df["label"].unique()):
     tracer = go.Scatter(
         x = label_filter('x',data_class),
         y = label_filter('y',data_class),
-        dy = 1,
+        dy = 1, # step sizes for y
+        text = label_filter('filename', data_class),
+        hoverinfo = 'text',
         mode = 'markers',
         marker = {
             'size': 12,
@@ -59,13 +61,11 @@ app.layout = html.Div([
     html.P(html.Div([html.Pre(id='debug-selection', style={'paddingTop':100})])),
     
 ])
-app.logger.info('message')
 ### Debugging Block ###
 @app.callback(
     Output('debug-selection', 'children'),
     [Input('wheels-plot', 'hoverData')])
 def callback_image2(hoverData):
-    print("Hello callback")
     # filename =  {'points': [{'curveNumber': 0, 'pointIndex': 1, 'pointNumber': 1, 'y': -197.04065, 'x': 14.633121}]}
     # x=hoverData['points'][0]['x']
     return json.dumps(hoverData, indent=2)
@@ -75,11 +75,13 @@ def callback_image2(hoverData):
     Output('hover-image', 'src'),
     [Input('wheels-plot', 'hoverData')])
 def callback_image(hoverData):
-    index=hoverData['points'][0]['pointIndex']
+    # index=hoverData['points'][0]['pointIndex']
+    filenamelist = label_filter('filename',hoverData['points'][0]['curveNumber'])
+    filename = filenamelist.iloc[hoverData['points'][0]['pointIndex']]
     # hoverData =  {'points': [{'curveNumber': 0, 'pointIndex': 1, 'pointNumber': 1, 'y': -197.04065, 'x': 14.633121}]}
     # x=hoverData['points'][0]['x']
     path = './MNIST_img/'
-    return encode_image(path+str(index) + '.png')
+    return encode_image(path+str(filename) + '.png')
 
 
 
