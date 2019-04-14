@@ -37,13 +37,24 @@ for data_class in sorted(df["label"].unique()):
     )
     tracer_list.append(tracer)
 
+model_meun = ['TSNE','VAE+TSNE','VAE','TNN+TSNE','TNN']
+dataset_meun = ['MNIST','CIFAR-10','Music']
 app.layout = html.Div([
+                html.Div([dcc.Dropdown(id='model',
+                                       options=[{'label':i,'value':i} for i in model_meun],
+                                       value='TSNE')],
+                         style={'width':'48%','display':'inline-block'}),
+                html.Div([dcc.Dropdown(id='dataset',
+                                       options={'label':['MNIST','CIFAR-10','Music'],
+                                                'value':['MNIST','CIFAR-10','Music']},
+                                       value='MNIST')],
+                         style={'width':'48%','display':'inline-block'}),
                 html.Div([
                     dcc.Graph(
                         id='wheels-plot',
                         figure={
                             'data': tracer_list,
-                            'layout': 
+                            'layout':
                                 go.Layout(
                                     title = 'TSN-plot',
                                     xaxis = {'title': 'x-axis'},
@@ -59,7 +70,7 @@ app.layout = html.Div([
 
     # Debugging
     html.P(html.Div([html.Pre(id='debug-selection', style={'paddingTop':100})])),
-    
+
 ])
 ### Debugging Block ###
 @app.callback(
