@@ -9,7 +9,9 @@ import json
 
 app = dash.Dash()
 server = app.server
-df = pd.read_csv('./MNIST_map.csv')
+df = pd.read_csv('./MNIST_map.csv') # Need to create a dictionary to store different results
+# How about dataset/
+# Can also put all the things inside a same csv, then use filter to filter out unwanted infromation
 
 def encode_image(image_file):
     encoded = base64.b64encode(open(image_file, 'rb').read())
@@ -26,7 +28,7 @@ for data_class in sorted(df["label"].unique()):
         y = label_filter('y',data_class),
         dy = 1, # step sizes for y
         text = label_filter('filename', data_class),
-        hoverinfo = 'text',
+        hoverinfo = ['x','y'],
         mode = 'markers',
         marker = {
             'size': 12,
@@ -40,11 +42,11 @@ for data_class in sorted(df["label"].unique()):
 model_meun = ['TSNE','VAE+TSNE','VAE','TNN+TSNE','TNN']
 dataset_meun = ['MNIST','CIFAR-10','Music']
 app.layout = html.Div([
-                html.Div([dcc.Dropdown(id='model',
+                html.Div([dcc.Dropdown(id='model_dropdown',
                                        options=[{'label':i,'value':i} for i in model_meun],
                                        value='TSNE')],
                          style={'width':'48%','display':'inline-block'}),
-                html.Div([dcc.Dropdown(id='dataset',
+                html.Div([dcc.Dropdown(id='dataset_dropdown',
                                        options=[{'label':i,'value':i} for i in dataset_meun],
                                        value='MNIST')],
                          style={'width':'48%','display':'inline-block'}),
@@ -80,6 +82,18 @@ def callback_image2(hoverData):
     # x=hoverData['points'][0]['x']
     return json.dumps(hoverData, indent=2)
 ### End of Debugging Block ###
+
+#@app.callback(
+#    Output('',''),
+#    [Input('model_dropdown','value')])
+#def update_model():
+#    # Something
+#@app.callback(
+#    Output('',''),
+#    [Input('model_dropdown','value')])
+#def update_model():
+#    # Something
+
 
 @app.callback(
     Output('hover-image', 'src'),
