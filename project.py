@@ -45,8 +45,7 @@ app.layout = html.Div([
                                        value='TSNE')],
                          style={'width':'48%','display':'inline-block'}),
                 html.Div([dcc.Dropdown(id='dataset',
-                                       options={'label':['MNIST','CIFAR-10','Music'],
-                                                'value':['MNIST','CIFAR-10','Music']},
+                                       options=[{'label':i,'value':i} for i in dataset_meun],
                                        value='MNIST')],
                          style={'width':'48%','display':'inline-block'}),
                 html.Div([
